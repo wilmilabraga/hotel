@@ -1,0 +1,27 @@
+[
+    {
+        "id": 1,
+        "nome": "mila",
+        "email": "mila@gmail.com",
+        "telefone": "323323232323",
+        "tipo": "organização",
+        "nif": "22222222222"
+    },
+    {
+        "id": 2,
+        "nome": "mila",
+        "email": "mila@gmail.com\t",
+        "telefone": "911000000",
+        "tipo": "individual",
+        "nif": "2222222222"
+    },
+    {
+        "id": 3,
+        "nome": "mila",
+        "email": "mila@gmail.com\t",
+        "telefone": "911000000",
+        "tipo": "individual",
+        "nif": "2222222222"
+    }
+
+]

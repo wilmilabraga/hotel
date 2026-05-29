@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Nova Reserva</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<h1>Nova Reserva</h1>
+
+<form method="POST">
+
+    <label>Cliente:</label>
+    <select name="cliente_id">
+        {% for c in clientes %}
+        <option value="{{ c.num_cliente }}">{{ c.nome }}</option>
+        {% endfor %}    

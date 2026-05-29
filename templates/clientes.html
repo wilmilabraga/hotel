@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Clientes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<h1>Lista de Clientes</h1>
+
+<a href="/">Voltar</a>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Tipo</th>
+        <th>Detalhes</th>
+    </tr>
+
+    {% for c in clientes %}
+    <tr>
+        <td>{{ c.num_cliente }}</td>
+        <td>{{ c.nome }}</td>
+        <td>{{ c.tipo }}</td>
+        <td>
+            {% if c.tipo == 'Individual' %}
+                NIF: {{ c.nif }}
+            {% else %}
+                Contacto: {{ c.contacto }} | NIPC: {{ c.nipc }}
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

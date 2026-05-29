@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Quartos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<h1>Quartos</h1>
+
+<table>
+    <tr>
+        <th>Número</th>
+        <th>Camas</th>
+        <th>Preço</th>
+    </tr>
+
+    {% for q in quartos %}
+    <tr>
+        <td>{{ q.numero }}</td>
+        <td>{{ q.num_camas }}</td>
+        <td>{{ q.preco }} €</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservas</title>
+
+    <style>
+
+        body{
+            font-family: Arial;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        h1{
+            color: #333;
+        }
+
+        a{
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        table{
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-top: 20px;
+        }
+
+        th, td{
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        th{
+            background: #007bff;
+            color: white;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <h1>Lista de Reservas</h1>
+
+    <a href="/">Voltar</a>
+
+    <table>
+
+        <tr>
+            <th>ID Reserva</th>
+            <th>Cliente</th>
+            <th>Quarto</th>
+            <th>Entrada</th>
+            <th>Saída</th>
+            <th>Camas Extra</th>
+            <th>Pessoas</th>
+        </tr>
+
+        {% for r in reservas %}
+
+        <tr>
+
+            <td>{{ r.num_reserva }}</td>
+
+            <td>{{ r.nome }}</td>
+
+            <td>{{ r.quarto }}</td>
+
+            <td>{{ r.dia_entrada }}</td>
+
+            <td>{{ r.dia_saida }}</td>
+
+            <td>{{ r.camaextra }}</td>
+
+            <td>{{ r.num_pessoas }}</td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</body>
+</html>

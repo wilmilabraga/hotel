@@ -1,0 +1,75 @@
+/* static/css/calendario.css */
+
+/* Estilização do Flatpickr */
+.flatpickr-calendar {
+    border-radius: 20px !important;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15) !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    border: none !important;
+}
+
+.flatpickr-day {
+    border-radius: 50% !important;
+    transition: all 0.2s ease !important;
+}
+
+.flatpickr-day.selected {
+    background: #C49A6C !important;
+    border-color: #C49A6C !important;
+    color: white !important;
+}
+
+.flatpickr-day.inRange {
+    background: #EBE2D4 !important;
+    border-color: #EBE2D4 !important;
+    color: #2D3A2B !important;
+}
+
+.flatpickr-day.disabled,
+.flatpickr-day.disabled:hover {
+    background: #f5f5f5 !important;
+    color: #ccc !important;
+    cursor: not-allowed !important;
+    text-decoration: line-through !important;
+}
+
+.flatpickr-day.today {
+    border-color: #C49A6C !important;
+    color: #C49A6C !important;
+}
+
+.flatpickr-day.today.selected {
+    background: #C49A6C !important;
+    color: white !important;
+}
+
+.flatpickr-day:hover:not(.disabled):not(.selected) {
+    background: #F0E6D8 !important;
+    border-color: #C49A6C !important;
+}
+
+/* Estilização dos inputs do calendário */
+input[type="text"]#checkin,
+input[type="text"]#checkout {
+    cursor: pointer;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23C49A6C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>');
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 20px;
+}
+
+/* Resumo da reserva */
+#resumoReserva {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

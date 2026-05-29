@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitta Resort - Sistema Administrativo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #F6F2E7;
+            color: #2D3A2B;
+        }
+
+        /* Login Page */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #2C5F2D 0%, #4A7C3F 100%);
+            position: relative;
+        }
+
+        .login-box {
+            background: white;
+            padding: 50px;
+            border-radius: 48px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .login-box h2 {
+            color: #2C5F2D;
+            margin-bottom: 10px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid #DCCFBC;
+            border-radius: 48px;
+            font-size: 1rem;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 15px;
+            background: #C49A6C;
+            color: white;
+            border: none;
+            border-radius: 48px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .error-msg {
+            color: #dc3545;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100%;
+            background: #2C5F2D;
+            color: white;
+            padding: 30px 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar h3 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .sidebar nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            border-radius: 40px;
+            margin: 8px 0;
+            transition: all 0.3s;
+        }
+
+        .sidebar nav a:hover, .sidebar nav a.active {
+            background: #C49A6C;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            padding: 30px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #DCCFBC;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 32px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .stat-card i {
+            font-size: 2.5rem;
+            color: #C49A6C;
+            margin-bottom: 15px;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            color: #2C5F2D;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 32px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .section-card h2 {
+            color: #2C5F2D;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #EBE2D4;
+        }
+
+        th {
+            background: #F6F2E7;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #ffc107;
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+
+        .status-confirmed {
+            background: #28a745;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+
+        .status-completed {
+            background: #6c757d;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+
+        .btn-action {
+            background: #C49A6C;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 0 3px;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-content input, .modal-content select, .modal-content textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #DCCFBC;
+            border-radius: 24px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+        }
+
+        .form-row > * {
+            flex: 1;
+        }
+
+        .btn-save {
+            background: #28a745;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 40px;
+            width: 100%;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        .invoice-box {
+            background: #F6F2E7;
+            padding: 20px;
+            border-radius: 24px;
+            margin-top: 20px;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-bar input, .filter-bar select {
+            padding: 10px;
+            border: 1px solid #DCCFBC;
+            border-radius: 24px;
+        }
+
+        .metodo-pagamento {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0;
+            padding: 15px;
+            background: #F6F2E7;
+            border-radius: 32px;
+            flex-wrap: wrap;
+        }
+
+        .metodo-pagamento label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 40px;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .metodo-pagamento label:hover {
+            background: #EBE2D4;
+        }
+
+        .metodo-pagamento input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 80px;
+                padding: 20px 10px;
+            }
+            .sidebar span {
+                display: none;
+            }
+            .main-content {
+                margin-left: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-box">
+            <i class="fas fa-spa" style="font-size: 3rem; color: #C49A6C;"></i>
+            <h2>Vitta Resort</h2>
+            <p>Sistema Administrativo</p>
+            <input type="text" id="loginUsername" placeholder="Usuário" value="admin">
+            <input type="password" id="loginPassword" placeholder="Senha" value="admin123">
+            <button onclick="fazerLogin()">Entrar</button>
+            <div id="loginError" class="error-msg"></div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+        <div class="sidebar">
+            <h3><i class="fas fa-spa"></i> <span>Vitta Resort</span></h3>
+            <nav>
+                <a href="#" onclick="mostrarSecao('dashboard')" class="active" id="nav-dashboard">
+                    <i class="fas fa-chart-line"></i> <span>Dashboard</span>
+                </a>
+                <a href="#" onclick="mostrarSecao('reservas')" id="nav-reservas">
+                    <i class="fas fa-calendar-check"></i> <span>Reservas</span>
+                </a>
+                <a href="#" onclick="mostrarSecao('clientes')" id="nav-clientes">
+                    <i class="fas fa-users"></i> <span>Clientes</span>
+                </a>
+                <a href="#" onclick="mostrarSecao('faturas')" id="nav-faturas">
+                    <i class="fas fa-file-invoice-dollar"></i> <span>Faturas</span>
+                </a>
+                <a href="#" onclick="mostrarSecao('pagamentos')" id="nav-pagamentos">
+                    <i class="fas fa-credit-card"></i> <span>Pagamentos</span>
+                </a>
+                <a href="#" onclick="mostrarSecao('config')" id="nav-config">
+                    <i class="fas fa-cog"></i> <span>Configurações</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <div class="top-bar">
+                <h1 id="pageTitle">Dashboard</h1>
+                <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div id="secaoDashboard">
+                <div class="stats-grid" id="statsGrid"></div>
+                
+                <div class="section-card">
+                    <h2><i class="fas fa-chart-simple"></i> Reservas por Mês</h2>
+                    <canvas id="reservasChart" style="max-height: 300px;"></canvas>
+                </div>
+
+                <div class="section-card">
+                    <h2><i class="fas fa-clock"></i> Últimas Reservas</h2>
+                    <div id="ultimasReservas"></div>
+                </div>
+            </div>
+
+            <!-- Reservas Section -->
+            <div id="secaoReservas" style="display: none;">
+                <div class="section-card">
+                    <h2><i class="fas fa-filter"></i> Filtros</h2>
+                    <div class="filter-bar">
+                        <input type="text" id="filtroNome" placeholder="Nome do cliente" onkeyup="filtrarReservas()">
+                        <select id="filtroStatus" onchange="filtrarReservas()">
+                            <option value="">Todos os status</option>
+                            <option value="pending">Pendente</option>
+                            <option value="confirmed">Confirmada</option>
+                            <option value="completed">Concluída</option>
+                            <option value="cancelled">Cancelada</option>
+                        </select>
+                        <input type="date" id="filtroData" onchange="filtrarReservas()">
+                        <button class="btn-action" onclick="exportarReservasCSV()"><i class="fas fa-download"></i> Exportar CSV</button>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h2><i class="fas fa-list"></i> Todas as Reservas</h2>
+                    <div style="overflow-x: auto;">
+                        <table id="tabelaReservas">
+                            <thead>
+                                <tr><th>ID</th><th>Cliente</th><th>Check-in</th><th>Check-out</th><th>Valor</th><th>Status</th><th>Ações</th></tr>
+                            </thead>
+                            <tbody id="listaReservas"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clientes Section -->
+            <div id="secaoClientes" style="display: none;">
+                <div class="section-card">
+                    <h2><i class="fas fa-user-plus"></i> Cadastrar Cliente</h2>
+                    <div class="form-row">
+                        <input type="text" id="novoClienteNome" placeholder="Nome completo">
+                        <input type="email" id="novoClienteEmail" placeholder="Email">
+                    </div>
+                    <div class="form-row">
+                        <input type="tel" id="novoClienteTelefone" placeholder="Telefone">
+                        <input type="text" id="novoClienteDocumento" placeholder="CPF/Passaporte">
+                    </div>
+                    <button class="btn-action" onclick="adicionarCliente()"><i class="fas fa-save"></i> Salvar Cliente</button>
+                </div>
+
+                <div class="section-card">
+                    <h2><i class="fas fa-users"></i> Lista de Clientes</h2>
+                    <div class="filter-bar">
+                        <input type="text" id="filtroCliente" placeholder="Buscar cliente..." onkeyup="filtrarClientes()">
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table id="tabelaClientes">
+                            <thead><tr><th>ID</th><th>Nome</th><th>Email</th><th>Telefone</th><th>Total Reservas</th><th>Ações</th></tr></thead>
+                            <tbody id="listaClientes"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Faturas Section -->
+            <div id="secaoFaturas" style="display: none;">
+                <div class="section-card">
+                    <h2><i class="fas fa-file-invoice"></i> Todas as Faturas</h2>
+                    <div style="overflow-x: auto;">
+                        <table id="tabelaFaturas">
+                            <thead><tr><th>ID</th><th>Cliente</th><th>Reserva ID</th><th>Valor</th><th>Status</th><th>Data Emissão</th><th>Ações</th></tr></thead>
+                            <tbody id="listaFaturas"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagamentos Section -->
+            <div id="secaoPagamentos" style="display: none;">
+                <div class="section-card">
+                    <h2><i class="fas fa-credit-card"></i> Registrar Pagamento</h2>
+                    <div class="form-row">
+                        <select id="pagamentoReserva" style="flex:2">
+                            <option value="">Selecione uma reserva</option>
+                        </select>
+                        <input type="number" id="pagamentoValor" placeholder="Valor" step="0.01">
+                    </div>
+                    
+                    <!-- Métodos de Pagamento simplificados para hotel internacional -->
+                    <div class="metodo-pagamento">
+                        <label>
+                            <input type="radio" name="metodoPagamento" value="credit_card" checked> 
+                            <i class="fas fa-credit-card"></i> Cartão de Crédito
+                        </label>
+                        <label>
+                            <input type="radio" name="metodoPagamento" value="debit_card"> 
+                            <i class="fas fa-credit-card"></i> Cartão de Débito
+                        </label>
+                        <label>
+                            <input type="radio" name="metodoPagamento" value="cash"> 
+                            <i class="fas fa-money-bill-wave"></i> Dinheiro
+                        </label>
+                    </div>
+
+                    <div class="form-row">
+                        <select id="pagamentoParcelas">
+                            <option value="1">À vista</option>
+                            <option value="2">2x</option>
+                            <option value="3">3x</option>
+                            <option value="4">4x</option>
+                            <option value="5">5x</option>
+                            <option value="6">6x</option>
+                        </select>
+                    </div>
+
+                    <!-- Campos adicionais para cartão -->
+                    <div id="camposCartao" style="display: block;">
+                        <div class="form-row">
+                            <input type="text" id="cartaoNome" placeholder="Nome no cartão">
+                        </div>
+                        <div class="form-row">
+                            <input type="text" id="cartaoNumero" placeholder="Número do cartão">
+                            <input type="text" id="cartaoValidade" placeholder="Validade (MM/AA)">
+                        </div>
+                        <div class="form-row">
+                            <input type="text" id="cartaoCvv" placeholder="CVV" style="width: 100px;">
+                            <select id="cartaoBandeira" style="flex:1">
+                                <option value="">Bandeira do cartão</option>
+                                <option value="visa">Visa</option>
+                                <option value="mastercard">Mastercard</option>
+                                <option value="amex">American Express</option>
+                                <option value="elo">Elo</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Campos para dinheiro -->
+                    <div id="camposDinheiro" style="display: none;">
+                        <div class="form-row">
+                            <select id="moedaRecebida">
+                                <option value="BRL">Real Brasileiro (R$)</option>
+                                <option value="USD">Dólar Americano (US$)</option>
+                                <option value="EUR">Euro (€)</option>
+                                <option value="GBP">Libra Esterlina (£)</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <input type="number" id="valorRecebido" placeholder="Valor recebido">
+                        </div>
+                    </div>
+
+                    <button class="btn-action" onclick="registrarPagamento()"><i class="fas fa-check-circle"></i> Registrar Pagamento</button>
+                </div>
+
+                <div class="section-card">
+                    <h2><i class="fas fa-history"></i> Histórico de Pagamentos</h2>
+                    <div style="overflow-x: auto;">
+                        <table id="tabelaPagamentos">
+                            <thead><tr><th>ID</th><th>Reserva</th><th>Cliente</th><th>Valor</th><th>Método</th><th>Parcelas</th><th>Data</th><th>Status</th></tr></thead>
+                            <tbody id="listaPagamentos"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configurações Section -->
+            <div id="secaoConfig" style="display: none;">
+                <div class="section-card">
+                    <h2><i class="fas fa-shield-alt"></i> Segurança</h2>
+                    <label>Alterar Senha do Administrador</label>
+                    <input type="password" id="novaSenha" placeholder="Nova senha">
+                    <input type="password" id="confirmarSenha" placeholder="Confirmar senha">
+                    <button class="btn-action" onclick="alterarSenha()"><i class="fas fa-save"></i> Salvar</button>
+                </div>
+
+                <div class="section-card">
+                    <h2><i class="fas fa-database"></i> Backup e Restauração</h2>
+                    <button class="btn-action" onclick="exportarDados()"><i class="fas fa-download"></i> Exportar Dados (Backup)</button>
+                    <button class="btn-action" onclick="importarDados()"><i class="fas fa-upload"></i> Importar Dados</button>
+                    <input type="file" id="importFile" style="display: none;" accept=".json" onchange="importarArquivo(this)">
+                </div>
+
+                <div class="section-card">
+                    <h2><i class="fas fa-globe"></i> Configurações de Moeda</h2>
+                    <label>Moeda padrão para transações:</label>
+                    <select id="moedaPadrao" onchange="alterarMoedaPadrao()">
+                        <option value="BRL">Real Brasileiro (R$)</option>
+                        <option value="USD">Dólar Americano (US$)</option>
+                        <option value="EUR">Euro (€)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar reserva -->
+    <div id="modalReserva" class="modal">
+        <div class="modal-content">
+            <h3>Editar Reserva</h3>
+            <input type="hidden" id="editReservaId">
+            <input type="text" id="editNome" placeholder="Nome do cliente">
+            <input type="email" id="editEmail" placeholder="Email">
+            <input type="tel" id="editTelefone" placeholder="Telefone">
+            <input type="date" id="editCheckin">
+            <input type="date" id="editCheckout">
+            <select id="editStatus">
+                <option value="pending">Pendente</option>
+                <option value="confirmed">Confirmada</option>
+                <option value="completed">Concluída</option>
+                <option value="cancelled">Cancelada</option>
+            </select>
+            <button class="btn-save" onclick="salvarEdicaoReserva()">Salvar Alterações</button>
+            <button class="btn-action" style="margin-top: 10px; background: #6c757d;" onclick="fecharModal('modalReserva')">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Modal para emitir fatura -->
+    <div id="modalFatura" class="modal">
+        <div class="modal-content">
+            <h3>Detalhes da Fatura</h3>
+            <div id="faturaDetalhes"></div>
+            <button class="btn-action" onclick="imprimirFatura()"><i class="fas fa-print"></i> Imprimir</button>
+            <button class="btn-action" style="margin-top: 10px; background: #6c757d;" onclick="fecharModal('modalFatura')">Fechar</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Dados simulados do sistema
+        let adminUser = { username: 'admin', password: 'admin123' };
+        let reservas = [];
+        let clientes = [];
+        let faturas = [];
+        let pagamentos = [];
+        let proximoIdReserva = 1;
+        let proximoIdCliente = 1;
+        let proximoIdFatura = 1;
+        let proximoIdPagamento = 1;
+        let chartInstance = null;
+        let moedaPadrao = 'BRL';
+
+        // Taxas de câmbio
+        const TAXAS_CAMBIO = { 'BRL': 1, 'USD': 0.19, 'EUR': 0.17 };
+
+        // Carregar dados do localStorage
+        function carregarDados() {
+            const saved = localStorage.getItem('vitta_admin_data');
+            if (saved) {
+                const data = JSON.parse(saved);
+                reservas = data.reservas || [];
+                clientes = data.clientes || [];
+                faturas = data.faturas || [];
+                pagamentos = data.pagamentos || [];
+                proximoIdReserva = data.proximoIdReserva || 1;
+                proximoIdCliente = data.proximoIdCliente || 1;
+                proximoIdFatura = data.proximoIdFatura || 1;
+                proximoIdPagamento = data.proximoIdPagamento || 1;
+                moedaPadrao = data.moedaPadrao || 'BRL';
+            }
+            
+            if (reservas.length === 0) {
+                criarDadosExemplo();
+            }
+            atualizarInterface();
+        }
+
+        function criarDadosExemplo() {
+            const clientesExemplo = [
+                { id: 1, nome: 'João Silva', email: 'joao@email.com', telefone: '(11) 99999-1111', documento: '123.456.789-00' },
+                { id: 2, nome: 'Maria Santos', email: 'maria@email.com', telefone: '(11) 99999-2222', documento: '987.654.321-00' },
+                { id: 3, nome: 'John Smith', email: 'john@email.com', telefone: '+1 555 1234', documento: 'AB123456' }
+            ];
+            
+            const hoje = new Date();
+            const reservasExemplo = [
+                { id: 1, clienteId: 1, clienteNome: 'João Silva', checkin: '2025-06-15', checkout: '2025-06-18', quarto: 'Cabana da Mata', valor: 1350, status: 'confirmed', pessoas: 2, camaextra: false, dataReserva: '2025-05-01' },
+                { id: 2, clienteId: 2, clienteNome: 'Maria Santos', checkin: '2025-06-20', checkout: '2025-06-25', quarto: 'Oca Wellness', valor: 2750, status: 'pending', pessoas: 3, camaextra: true, dataReserva: '2025-05-02' },
+                { id: 3, clienteId: 3, clienteNome: 'John Smith', checkin: '2025-07-01', checkout: '2025-07-05', quarto: 'Kuriá Premium', valor: 3000, status: 'confirmed', pessoas: 2, camaextra: false, dataReserva: '2025-05-03' }
+            ];
+            
+            const faturasExemplo = [
+                { id: 1, reservaId: 1, clienteId: 1, clienteNome: 'João Silva', valor: 1350, status: 'paid', dataEmissao: '2025-05-01', vencimento: '2025-06-10' },
+                { id: 2, reservaId: 2, clienteId: 2, clienteNome: 'Maria Santos', valor: 2750, status: 'pending', dataEmissao: '2025-05-02', vencimento: '2025-06-15' }
+            ];
+            
+            const pagamentosExemplo = [
+                { id: 1, reservaId: 1, clienteId: 1, clienteNome: 'João Silva', valor: 1350, metodo: 'credit_card', metodoTexto: 'Cartão de Crédito', parcelas: 3, data: '2025-05-05', status: 'paid', moeda: 'BRL' }
+            ];
+            
+            clientes = clientesExemplo;
+            reservas = reservasExemplo;
+            faturas = faturasExemplo;
+            pagamentos = pagamentosExemplo;
+            proximoIdReserva = 4;
+            proximoIdCliente = 4;
+            proximoIdFatura = 3;
+            proximoIdPagamento = 2;
+        }
+
+        function salvarDados() {
+            const data = {
+                reservas, clientes, faturas, pagamentos,
+                proximoIdReserva, proximoIdCliente, proximoIdFatura, proximoIdPagamento,
+                moedaPadrao
+            };
+            localStorage.setItem('vitta_admin_data', JSON.stringify(data));
+            localStorage.setItem('vitta_admin_password', adminUser.password);
+        }
+
+        function fazerLogin() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (username === adminUser.username && password === adminUser.password) {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                carregarDados();
+                mostrarSecao('dashboard');
+            } else {
+                document.getElementById('loginError').innerText = 'Usuário ou senha inválidos!';
+            }
+        }
+
+        function logout() {
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('dashboard').style.display = 'none';
+        }
+
+        function mostrarSecao(secao) {
+            const secoes = ['dashboard', 'reservas', 'clientes', 'faturas', 'pagamentos', 'config'];
+            secoes.forEach(s => {
+                document.getElementById(`secao${s.charAt(0).toUpperCase() + s.slice(1)}`).style.display = 'none';
+            });
+            document.getElementById(`secao${secao.charAt(0).toUpperCase() + secao.slice(1)}`).style.display = 'block';
+            
+            const titles = {
+                dashboard: 'Dashboard',
+                reservas: 'Gestão de Reservas',
+                clientes: 'Gestão de Clientes',
+                faturas: 'Faturas',
+                pagamentos: 'Pagamentos',
+                config: 'Configurações'
+            };
+            document.getElementById('pageTitle').innerText = titles[secao];
+            
+            atualizarInterface();
+        }
+
+        function atualizarInterface() {
+            atualizarDashboard();
+            atualizarListaReservas();
+            atualizarListaClientes();
+            atualizarListaFaturas();
+            atualizarListaPagamentos();
+            atualizarSelectReservas();
+            salvarDados();
+        }
+
+        function atualizarDashboard() {
+            const totalReservas = reservas.length;
+            const reservasConfirmadas = reservas.filter(r => r.status === 'confirmed').length;
+            const faturamentoTotal = pagamentos.reduce((sum, p) => sum + p.valor, 0);
+            const clientesAtivos = clientes.length;
+            
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card"><i class="fas fa-calendar"></i><h3>${totalReservas}</h3><p>Total de Reservas</p></div>
+                <div class="stat-card"><i class="fas fa-check-circle"></i><h3>${reservasConfirmadas}</h3><p>Reservas Confirmadas</p></div>
+                <div class="stat-card"><i class="fas fa-dollar-sign"></i><h3>${formatarMoeda(faturamentoTotal)}</h3><p>Faturamento Total</p></div>
+                <div class="stat-card"><i class="fas fa-users"></i><h3>${clientesAtivos}</h3><p>Clientes Ativos</p></div>
+            `;
+            
+            const ultimas = reservas.slice(-5).reverse();
+            document.getElementById('ultimasReservas').innerHTML = `
+                <table><thead><tr><th>Cliente</th><th>Check-in</th><th>Check-out</th><th>Valor</th><th>Status</th></tr></thead>
+                <tbody>${ultimas.map(r => `<tr><td>${r.clienteNome}</td><td>${r.checkin}</td><td>${r.checkout}</td><td>${formatarMoeda(r.valor)}</td><td><span class="status-${r.status}">${getStatusText(r.status)}</span></td></tr>`).join('')}</tbody></table>
+            `;
+            
+            // Gráfico
+            const reservasPorMes = {};
+            reservas.forEach(r => {
+                const mes = r.dataReserva ? r.dataReserva.substring(0, 7) : '2025-01';
+                reservasPorMes[mes] = (reservasPorMes[mes] || 0) + 1;
+            });
+            
+            const meses = Object.keys(reservasPorMes).sort();
+            const valores = meses.map(m => reservasPorMes[m]);
+            
+            if (chartInstance) chartInstance.destroy();
+            const ctx = document.getElementById('reservasChart').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: { labels: meses, datasets: [{ label: 'Reservas', data: valores, backgroundColor: '#C49A6C' }] },
+                options: { responsive: true, maintainAspectRatio: true }
+            });
+        }
+
+        function formatarMoeda(valor) {
+            if (moedaPadrao === 'BRL') {
+                return `R$ ${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+            } else if (moedaPadrao === 'USD') {
+                return `US$ ${(valor * TAXAS_CAMBIO.USD).toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+            } else {
+                return `€ ${(valor * TAXAS_CAMBIO.EUR).toLocaleString('de-DE', { minimumFractionDigits: 2 })}`;
+            }
+        }
+
+        function getStatusText(status) {
+            const statusMap = { pending: 'Pendente', confirmed: 'Confirmada', completed: 'Concluída', cancelled: 'Cancelada' };
+            return statusMap[status] || status;
+        }
+
+        function getMetodoTexto(metodo) {
+            const metodos = { 
+                credit_card: 'Cartão de Crédito', 
+                debit_card: 'Cartão de Débito', 
+                cash: 'Dinheiro'
+            };
+            return metodos[metodo] || metodo;
+        }
+
+        function atualizarListaReservas() {
+            const tbody = document.getElementById('listaReservas');
+            tbody.innerHTML = reservas.map(r => `
+                <tr>
+                    <td>${r.id}</td>
+                    <td>${r.clienteNome}</td>
+                    <td>${r.checkin}</td>
+                    <td>${r.checkout}</td>
+                    <td>${formatarMoeda(r.valor)}</td>
+                    <td><span class="status-${r.status}">${getStatusText(r.status)}</span></td>
+                    <td>
+                        <button class="btn-action" onclick="editarReserva(${r.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn-action btn-danger" onclick="cancelarReserva(${r.id})"><i class="fas fa-times"></i></button>
+                        <button class="btn-action" onclick="emitirFatura(${r.id})"><i class="fas fa-file-invoice"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filtrarReservas() {
+            const nome = document.getElementById('filtroNome').value.toLowerCase();
+            const status = document.getElementById('filtroStatus').value;
+            const data = document.getElementById('filtroData').value;
+            
+            let filtradas = reservas;
+            if (nome) filtradas = filtradas.filter(r => r.clienteNome.toLowerCase().includes(nome));
+            if (status) filtradas = filtradas.filter(r => r.status === status);
+            if (data) filtradas = filtradas.filter(r => r.checkin === data || r.checkout === data);
+            
+            const tbody = document.getElementById('listaReservas');
+            tbody.innerHTML = filtradas.map(r => `
+                <tr><td>${r.id}</td><td>${r.clienteNome}</td><td>${r.checkin}</td><td>${r.checkout}</td>
+                <td>${formatarMoeda(r.valor)}</td><td><span class="status-${r.status}">${getStatusText(r.status)}</span></td>
+                <td><button class="btn-action" onclick="editarReserva(${r.id})"><i class="fas fa-edit"></i></button>
+                <button class="btn-action btn-danger" onclick="cancelarReserva(${r.id})"><i class="fas fa-times"></i></button>
+                <button class="btn-action" onclick="emitirFatura(${r.id})"><i class="fas fa-file-invoice"></i></button></td>
+            </tr>`).join('');
+        }
+
+        function exportarReservasCSV() {
+            let csv = "ID,Cliente,Check-in,Check-out,Quarto,Valor,Status\n";
+            reservas.forEach(r => {
+                csv += `${r.id},"${r.clienteNome}",${r.checkin},${r.checkout},"${r.quarto}",${r.valor},${getStatusText(r.status)}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'reservas.csv';
+            link.click();
+        }
+
+        function editarReserva(id) {
+            const reserva = reservas.find(r => r.id === id);
+            if (reserva) {
+                document.getElementById('editReservaId').value = reserva.id;
+                document.getElementById('editNome').value = reserva.clienteNome;
+                document.getElementById('editEmail').value = '';
+                document.getElementById('editTelefone').value = '';
+                document.getElementById('editCheckin').value = reserva.checkin;
+                document.getElementById('editCheckout').value = reserva.checkout;
+                document.getElementById('editStatus').value = reserva.status;
+                document.getElementById('modalReserva').style.display = 'flex';
+            }
+        }
+
+        function salvarEdicaoReserva() {
+            const id = parseInt(document.getElementById('editReservaId').value);
+            const reserva = reservas.find(r => r.id === id);
+            if (reserva) {
+                reserva.checkin = document.getElementById('editCheckin').value;
+                reserva.checkout = document.getElementById('editCheckout').value;
+                reserva.status = document.getElementById('editStatus').value;
+                atualizarInterface();
+            }
+            fecharModal('modalReserva');
+        }
+
+        function cancelarReserva(id) {
+            if (confirm('Tem certeza que deseja cancelar esta reserva?')) {
+                const reserva = reservas.find(r => r.id === id);
+                if (reserva) reserva.status = 'cancelled';
+                atualizarInterface();
+            }
+        }
+
+        function emitirFatura(reservaId) {
+            const reserva = reservas.find(r => r.id === reservaId);
+            if (reserva) {
+                const faturaExistente = faturas.find(f => f.reservaId === reservaId);
+                if (!faturaExistente) {
+                    faturas.push({
+                        id: proximoIdFatura++,
+                        reservaId: reserva.id,
+                        clienteId: reserva.clienteId,
+                        clienteNome: reserva.clienteNome,
+                        valor: reserva.valor,
+                        status: 'pending',
+                        dataEmissao: new Date().toISOString().split('T')[0],
+                        vencimento: new Date(Date.now() + 15*24*60*60*1000).toISOString().split('T')[0]
+                    });
+                    atualizarInterface();
+                    alert('Fatura emitida com sucesso!');
+                } else {
+                    alert('Esta reserva já possui uma fatura.');
+                }
+            }
+        }
+
+        function atualizarListaClientes() {
+            const tbody = document.getElementById('listaClientes');
+            tbody.innerHTML = clientes.map(c => {
+                const totalReservas = reservas.filter(r => r.clienteId === c.id).length;
+                return `
+                    <tr>
+                        <td>${c.id}</td>
+                        <td>${c.nome}</td>
+                        <td>${c.email}</td>
+                        <td>${c.telefone}</td>
+                        <td>${totalReservas}</td>
+                        <td><button class="btn-action btn-danger" onclick="excluirCliente(${c.id})"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filtrarClientes() {
+            const busca = document.getElementById('filtroCliente').value.toLowerCase();
+            const tbody = document.getElementById('listaClientes');
+            const filtrados = clientes.filter(c => c.nome.toLowerCase().includes(busca) || c.email.toLowerCase().includes(busca));
+            tbody.innerHTML = filtrados.map(c => `
+                <tr><td>${c.id}</td><td>${c.nome}</td><td>${c.email}</td><td>${c.telefone}</td>
+                <td>${reservas.filter(r => r.clienteId === c.id).length}</td>
+                <td><button class="btn-action btn-danger" onclick="excluirCliente(${c.id})"><i class="fas fa-trash"></i></button></td></tr>
+            `).join('');
+        }
+
+        function adicionarCliente() {
+            const nome = document.getElementById('novoClienteNome').value;
+            const email = document.getElementById('novoClienteEmail').value;
+            const telefone = document.getElementById('novoClienteTelefone').value;
+            const documento = document.getElementById('novoClienteDocumento').value;
+            
+            if (!nome || !email) {
+                alert('Preencha nome e email do cliente.');
+                return;
+            }
+            
+            clientes.push({
+                id: proximoIdCliente++,
+                nome, email, telefone, documento
+            });
+            
+            document.getElementById('novoClienteNome').value = '';
+            document.getElementById('novoClienteEmail').value = '';
+            document.getElementById('novoClienteTelefone').value = '';
+            document.getElementById('novoClienteDocumento').value = '';
+            
+            atualizarInterface();
+            alert('Cliente adicionado com sucesso!');
+        }
+
+        function excluirCliente(id) {
+            if (confirm('Tem certeza? Todas as reservas deste cliente também serão canceladas.')) {
+                clientes = clientes.filter(c => c.id !== id);
+                reservas = reservas.filter(r => r.clienteId !== id);
+                atualizarInterface();
+            }
+        }
+
+        function atualizarListaFaturas() {
+            const tbody = document.getElementById('listaFaturas');
+            tbody.innerHTML = faturas.map(f => `
+                <tr>
+                    <td>${f.id}</td>
+                    <td>${f.clienteNome}</td>
+                    <td>${f.reservaId}</td>
+                    <td>${formatarMoeda(f.valor)}</td>
+                    <td><span class="status-${f.status === 'paid' ? 'confirmed' : 'pending'}">${f.status === 'paid' ? 'Pago' : 'Pendente'}</span></td>
+                    <td>${f.dataEmissao}</td>
+                    <td><button class="btn-action" onclick="verFatura(${f.id})"><i class="fas fa-eye"></i></button></td>
+                </tr>
+            `).join('');
+        }
+
+        function verFatura(id) {
+            const fatura = faturas.find(f => f.id === id);
+            if (fatura) {
+                document.getElementById('faturaDetalhes').innerHTML = `
+                    <div class="invoice-box">
+                        <h3>Vitta Resort Wellness</h3>
+                        <p><strong>Fatura Nº:</strong> ${fatura.id}</p>
+                        <p><strong>Cliente:</strong> ${fatura.clienteNome}</p>
+                        <p><strong>Reserva ID:</strong> ${fatura.reservaId}</p>
+                        <p><strong>Data Emissão:</strong> ${fatura.dataEmissao}</p>
+                        <p><strong>Vencimento:</strong> ${fatura.vencimento}</p>
+                        <hr>
+                        <h4>Valor Total: ${formatarMoeda(fatura.valor)}</h4>
+                        <p><strong>Status:</strong> ${fatura.status === 'paid' ? 'Pago' : 'Pendente'}</p>
+                        <hr>
+                        <p><small>Banco: 001 - Banco do Brasil | Ag: 1234 | CC: 56789-0</small></p>
+                        <p><small>PIX: chave@vittaresort.com</small></p>
+                        <p><small>Aceitamos: Cartão de Crédito, Cartão de Débito e Dinheiro</small></p>
+                    </div>
+                `;
+                document.getElementById('modalFatura').style.display = 'flex';
+            }
+        }
+
+        function imprimirFatura() {
+            const conteudo = document.getElementById('faturaDetalhes').innerHTML;
+            const win = window.open('', '_blank');
+            win.document.write(`
+                <html><head><title>Fatura Vitta Resort</title>
+                <style>body{font-family: Arial; padding: 40px;} .invoice-box{padding: 20px; border: 1px solid #ccc;}</style>
+                </head><body>${conteudo}</body></html>
+            `);
+            win.print();
+        }
+
+        function atualizarListaPagamentos() {
+            const tbody = document.getElementById('listaPagamentos');
+            tbody.innerHTML = pagamentos.map(p => `
+                <tr>
+                    <td>${p.id}</td>
+                    <td>${p.reservaId}</td>
+                    <td>${p.clienteNome}</td>
+                    <td>${formatarMoeda(p.valor)}</td>
+                    <td><i class="fas ${p.metodo === 'cash' ? 'fa-money-bill-wave' : 'fa-credit-card'}"></i> ${getMetodoTexto(p.metodo)}</td>
+                    <td>${p.parcelas}x</td>
+                    <td>${p.data}</td>
+                    <td><span class="status-confirmed">Pago</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function atualizarSelectReservas() {
+            const select = document.getElementById('pagamentoReserva');
+            const reservasPendentes = reservas.filter(r => r.status !== 'cancelled');
+            select.innerHTML = '<option value="">Selecione uma reserva</option>' + 
+                reservasPendentes.map(r => `<option value="${r.id}">#${r.id} - ${r.clienteNome} - ${formatarMoeda(r.valor)}</option>`).join('');
+        }
+
+        // Mostrar/esconder campos de cartão e dinheiro
+        document.addEventListener('DOMContentLoaded', function() {
+            const radios = document.querySelectorAll('input[name="metodoPagamento"]');
+            radios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const camposCartao = document.getElementById('camposCartao');
+                    const camposDinheiro = document.getElementById('camposDinheiro');
+                    
+                    if (this.value === 'cash') {
+                        camposCartao.style.display = 'none';
+                        camposDinheiro.style.display = 'block';
+                    } else {
+                        camposCartao.style.display = 'block';
+                        camposDinheiro.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        function registrarPagamento() {
+            const reservaId = parseInt(document.getElementById('pagamentoReserva').value);
+            let valor = parseFloat(document.getElementById('pagamentoValor').value);
+            const metodo = document.querySelector('input[name="metodoPagamento"]:checked').value;
+            const parcelas = parseInt(document.getElementById('pagamentoParcelas').value);
+            
+            if (!reservaId || !valor) {
+                alert('Selecione uma reserva e informe o valor.');
+                return;
+            }
+            
+            const reserva = reservas.find(r => r.id === reservaId);
+            if (reserva) {
+                // Se for pagamento em dinheiro e moeda diferente, converter valor
+                if (metodo === 'cash') {
+                    const moedaRecebida = document.getElementById('moedaRecebida').value;
+                    const valorRecebido = parseFloat(document.getElementById('valorRecebido').value);
+                    if (moedaRecebida !== 'BRL' && valorRecebido) {
+                        valor = valorRecebido / TAXAS_CAMBIO[moedaRecebida];
+                    }
+                }
+                
+                // Dados do cartão (se aplicável)
+                let dadosCartao = null;
+                if (metodo !== 'cash') {
+                    dadosCartao = {
+                        nome: document.getElementById('cartaoNome').value,
+                        numero: document.getElementById('cartaoNumero').value,
+                        validade: document.getElementById('cartaoValidade').value,
+                        cvv: document.getElementById('cartaoCvv').value,
+                        bandeira: document.getElementById('cartaoBandeira').value
+                    };
+                }
+                
+                pagamentos.push({
+                    id: proximoIdPagamento++,
+                    reservaId: reserva.id,
+                    clienteId: reserva.clienteId,
+                    clienteNome: reserva.clienteNome,
+                    valor: valor,
+                    metodo: metodo,
+                    metodoTexto: getMetodoTexto(metodo),
+                    parcelas: parcelas,
+                    data: new Date().toISOString().split('T')[0],
+                    status: 'paid',
+                    moeda: moedaPadrao,
+                    dadosCartao: dadosCartao
+                });
+                
+                const fatura = faturas.find(f => f.reservaId === reservaId);
+                if (fatura) fatura.status = 'paid';
+                
+                document.getElementById('pagamentoReserva').value = '';
+                document.getElementById('pagamentoValor').value = '';
+                document.getElementById('cartaoNome').value = '';
+                document.getElementById('cartaoNumero').value = '';
+                document.getElementById('cartaoValidade').value = '';
+                document.getElementById('cartaoCvv').value = '';
+                document.getElementById('valorRecebido').value = '';
+                
+                atualizarInterface();
+                alert('Pagamento registrado com sucesso!');
+            }
+        }
+
+        function exportarDados() {
+            const dados = { reservas, clientes, faturas, pagamentos, moedaPadrao };
+            const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `vitta_backup_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+
+        function importarDados() {
+            document.getElementById('importFile').click();
+        }
+
+        function importarArquivo(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const dados = JSON.parse(e.target.result);
+                        if (dados.reservas) reservas = dados.reservas;
+                        if (dados.clientes) clientes = dados.clientes;
+                        if (dados.faturas) faturas = dados.faturas;
+                        if (dados.pagamentos) pagamentos = dados.pagamentos;
+                        if (dados.moedaPadrao) moedaPadrao = dados.moedaPadrao;
+                        atualizarInterface();
+                        alert('Dados importados com sucesso!');
+                    } catch (err) {
+                        alert('Erro ao importar arquivo.');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function alterarSenha() {
+            const nova = document.getElementById('novaSenha').value;
+            const confirmar = document.getElementById('confirmarSenha').value;
+            
+            if (!nova || nova !== confirmar) {
+                alert('As senhas não coincidem ou estão vazias.');
+                return;
+            }
+            
+            adminUser.password = nova;
+            localStorage.setItem('vitta_admin_password', nova);
+            alert('Senha alterada com sucesso!');
+            document.getElementById('novaSenha').value = '';
+            document.getElementById('confirmarSenha').value = '';
+        }
+
+        function alterarMoedaPadrao() {
+            moedaPadrao = document.getElementById('moedaPadrao').value;
+            atualizarInterface();
+            alert(`Moeda padrão alterada para ${moedaPadrao}`);
+        }
+
+        function fecharModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedPassword = localStorage.getItem('vitta_admin_password');
+            if (savedPassword) adminUser.password = savedPassword;
+            
+            const savedMoeda = localStorage.getItem('vitta_moeda_padrao');
+            if (savedMoeda) {
+                moedaPadrao = savedMoeda;
+                document.getElementById('moedaPadrao').value = moedaPadrao;
+            }
+        });
+    </script>
+</body>
+</html>

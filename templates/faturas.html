@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Faturas</title>
+
+    <style>
+
+        body{
+            font-family: Arial;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        h1{
+            color: #333;
+        }
+
+        a{
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        table{
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-top: 20px;
+        }
+
+        th, td{
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        th{
+            background: #007bff;
+            color: white;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <h1>Lista de Faturas</h1>
+
+    <a href="/">Voltar</a>
+
+    <table>
+
+        <tr>
+            <th>Nº Fatura</th>
+            <th>Cliente</th>
+            <th>Data</th>
+            <th>Valor</th>
+        </tr>
+
+        {% for f in faturas %}
+
+        <tr>
+
+            <td>{{ f.num_fatura }}</td>
+
+            <td>{{ f.nome }}</td>
+
+            <td>{{ f.data }}</td>
+
+            <td>{{ f.valor }} €</td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</body>
+</html>

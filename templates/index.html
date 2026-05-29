@@ -1,0 +1,537 @@
+    </Q><!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitta Resort Wellness - Sistema de Reservas</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #F6F2E7 0%, #EBE2D4 100%);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #2D3A2B;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2C5F2D;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .natural-form {
+            background: white;
+            border-radius: 48px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .natural-form input,
+        .natural-form select,
+        .natural-form textarea {
+            width: 100%;
+            padding: 14px 18px;
+            margin: 10px 0;
+            border: 1px solid #DCCFBC;
+            border-radius: 48px;
+            background: #FEFAF3;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .natural-form input:focus,
+        .natural-form select:focus,
+        .natural-form textarea:focus {
+            border-color: #C49A6C;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(196, 154, 108, 0.1);
+        }
+        
+        .natural-form textarea {
+            border-radius: 28px;
+            resize: vertical;
+        }
+        
+        .btn-primary {
+            background: #C49A6C;
+            border: none;
+            padding: 14px 38px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            background: #A5774A;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        label {
+            font-weight: 500;
+            color: #2C5F2D;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        /* Estilização do calendário */
+        .flatpickr-calendar {
+            border-radius: 20px !important;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15) !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+        }
+        
+        .flatpickr-day.selected {
+            background: #C49A6C !important;
+            border-color: #C49A6C !important;
+        }
+        
+        .flatpickr-day.disabled,
+        .flatpickr-day.disabled:hover {
+            background: #f0f0f0 !important;
+            color: #ccc !important;
+            text-decoration: line-through;
+        }
+        
+        .flatpickr-day.inRange {
+            background: #EBE2D4 !important;
+            border-color: #EBE2D4 !important;
+        }
+        
+        #resumoReserva {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .moeda-selector {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: #FEFAF3;
+            border-radius: 48px;
+            border: 1px solid #DCCFBC;
+        }
+        
+        .moeda-selector label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            margin: 0;
+            font-weight: normal;
+        }
+        
+        .moeda-selector input[type="radio"] {
+            width: auto;
+            margin: 0;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 640px) {
+            .natural-form { padding: 25px; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <i class="fas fa-leaf" style="color: #C49A6C;"></i> 
+            Vitta Resort Wellness
+        </h1>
+        
+        <div class="natural-form">
+            <form id="bookingVitta" method="POST" action="/reservas/nova">
+                <input type="text" name="nome" placeholder="Seu nome completo" required>
+                <input type="email" name="email" placeholder="Melhor email" required>
+                <input type="tel" name="telefone" placeholder="WhatsApp/Telefone" required>
+                
+                <!-- Preços em Reais (base) -->
+                <select name="quarto" id="quarto" required>
+                    <option value="">Selecione o quarto</option>
+                    <option value="101" data-preco="450">Cabana da Mata - R$ 450/noite</option>
+                    <option value="102" data-preco="550">Oca Wellness - R$ 550/noite</option>
+                    <option value="103" data-preco="750">Kuriá Premium - R$ 750/noite</option>
+                    <option value="104" data-preco="890">Suíte das Palmeiras - R$ 890/noite</option>
+                    <option value="105" data-preco="480">Cabaña Rio Negro - R$ 480/noite</option>
+                </select>
+                
+                <!-- Seletor de Moeda -->
+                <div class="moeda-selector">
+                    <span style="font-weight: 500;">💱 Moeda:</span>
+                    <label>
+                        <input type="radio" name="moeda" value="BRL" checked> R$ Real
+                    </label>
+                    <label>
+                        <input type="radio" name="moeda" value="USD"> US$ Dólar
+                    </label>
+                    <label>
+                        <input type="radio" name="moeda" value="EUR"> € Euro
+                    </label>
+                </div>
+                
+                <div style="margin: 10px 0;">
+                    <label>
+                        <i class="fas fa-calendar-alt"></i> Data de Check-in
+                    </label>
+                    <input type="text" id="checkin" name="entrada" placeholder="Selecione a data de entrada" required>
+                </div>
+                
+                <div style="margin: 10px 0;">
+                    <label>
+                        <i class="fas fa-calendar-alt"></i> Data de Check-out
+                    </label>
+                    <input type="text" id="checkout" name="saida" placeholder="Selecione a data de saída" required>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin: 10px 0;">
+                    <input type="number" name="pessoas" placeholder="Nº de pessoas" min="1" max="4" value="2" required style="flex:1;">
+                    <label style="display: flex; align-items: center; gap: 8px; white-space: nowrap;">
+                        <input type="checkbox" name="camaextra" value="1" id="camaextra"> Cama extra
+                    </label>
+                </div>
+                
+                <div id="resumoReserva" style="background: #EBE2D4; border-radius: 32px; padding: 20px; margin: 20px 0; display: none;">
+                    <h4 style="color: #2C5F2D; margin-bottom: 15px;">
+                        <i class="fas fa-clipboard-list"></i> Resumo da Reserva
+                    </h4>
+                    <p><strong>Quarto:</strong> <span id="resumoQuarto">-</span></p>
+                    <p><strong>Check-in:</strong> <span id="resumoCheckin">-</span></p>
+                    <p><strong>Check-out:</strong> <span id="resumoCheckout">-</span></p>
+                    <p><strong>Diárias:</strong> <span id="resumoNoites">0</span> noite(s)</p>
+                    <p><strong>Moeda:</strong> <span id="resumoMoeda">R$</span></p>
+                    <p><strong>Valor total:</strong> <span id="resumoValor" style="font-size: 1.5rem; font-weight: bold; color: #C49A6C;">R$ 0</span></p>
+                </div>
+                
+                <textarea name="mensagem" rows="3" placeholder="Mensagem ou programa de interesse (yoga, drenagem, nutrição...)"></textarea>
+                
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-check-circle"></i> Reservar Retiro
+                </button>
+                <p id="reserveMsg" style="margin-top: 15px; font-size: 0.85rem; text-align: center;"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
+    
+    <script>
+        // Taxas de câmbio (valores aproximados - podem ser atualizados via API)
+        const TAXAS_CAMBIO = {
+            'BRL': 1,
+            'USD': 0.19,  // 1 BRL = 0.19 USD
+            'EUR': 0.17   // 1 BRL = 0.17 EUR
+        };
+        
+        const SIMBOLOS_MOEDA = {
+            'BRL': 'R$',
+            'USD': 'US$',
+            'EUR': '€'
+        };
+        
+        // Aguardar o DOM carregar completamente
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ DOM carregado - Inicializando calendário...');
+            
+            let checkinPicker = null;
+            let checkoutPicker = null;
+            let moedaAtual = 'BRL';
+            
+            // Configurar o calendário em português
+            flatpickr.localize(flatpickr.l10ns.pt);
+            
+            // Função para converter preço para moeda selecionada
+            function converterMoeda(precoBRL, moeda) {
+                const taxa = TAXAS_CAMBIO[moeda] || 1;
+                return precoBRL * taxa;
+            }
+            
+            // Função para formatar valor conforme moeda
+            function formatarMoeda(valor, moeda) {
+                const simbolo = SIMBOLOS_MOEDA[moeda] || 'R$';
+                const opcoes = {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                };
+                
+                if (moeda === 'USD') {
+                    return `${simbolo} ${valor.toFixed(2)}`;
+                } else if (moeda === 'EUR') {
+                    return `${simbolo} ${valor.toFixed(2)}`;
+                } else {
+                    return `${simbolo} ${valor.toLocaleString('pt-BR', opcoes)}`;
+                }
+            }
+            
+            // Função para carregar datas ocupadas
+            async function carregarDatasOcupadas(quarto) {
+                if (!quarto) return [];
+                try {
+                    const response = await fetch(`/api/datas-ocupadas?quarto=${quarto}`);
+                    const data = await response.json();
+                    console.log('📅 Datas ocupadas carregadas:', data.datas);
+                    return data.datas || [];
+                } catch (error) {
+                    console.error('Erro ao carregar datas ocupadas:', error);
+                    return [];
+                }
+            }
+            
+            // Calcular número de noites
+            function calcularNoites(data1, data2) {
+                if (!data1 || !data2) return 0;
+                const d1 = new Date(data1);
+                const d2 = new Date(data2);
+                const diffTime = Math.abs(d2 - d1);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                return diffDays;
+            }
+            
+            // Obter preço base do quarto em Reais
+            function getPrecoQuartoBase() {
+                const select = document.getElementById('quarto');
+                const option = select.options[select.selectedIndex];
+                // Tentar pegar do atributo data-preco
+                const precoData = option.getAttribute('data-preco');
+                if (precoData) {
+                    return parseInt(precoData);
+                }
+                // Fallback: extrair do texto
+                const texto = option.text;
+                const match = texto.match(/R\$ (\d+)/);
+                return match ? parseInt(match[1]) : 450;
+            }
+            
+            // Obter preço do quarto na moeda selecionada
+            function getPrecoQuartoFormatado() {
+                const precoBase = getPrecoQuartoBase();
+                const precoConvertido = converterMoeda(precoBase, moedaAtual);
+                return formatarMoeda(precoConvertido, moedaAtual);
+            }
+            
+            // Obter nome do quarto
+            function getNomeQuarto() {
+                const select = document.getElementById('quarto');
+                if (!select.value) return '-';
+                return select.options[select.selectedIndex].text.split(' - ')[0];
+            }
+            
+            // Atualizar resumo
+            async function atualizarResumo() {
+                const checkin = document.getElementById('checkin').value;
+                const checkout = document.getElementById('checkout').value;
+                const quartoSelect = document.getElementById('quarto');
+                const camaextra = document.getElementById('camaextra')?.checked || false;
+                const moedaSelecionada = document.querySelector('input[name="moeda"]:checked').value;
+                moedaAtual = moedaSelecionada;
+                
+                if (checkin && checkout && quartoSelect.value) {
+                    const noites = calcularNoites(checkin, checkout);
+                    const precoBase = getPrecoQuartoBase();
+                    const precoConvertido = converterMoeda(precoBase, moedaAtual);
+                    let valorTotalConvertido = precoConvertido * noites;
+                    
+                    // Adicionar cama extra (R$50 por noite convertido)
+                    if (camaextra) {
+                        const camaExtraConvertido = converterMoeda(50, moedaAtual);
+                        valorTotalConvertido += camaExtraConvertido * noites;
+                    }
+                    
+                    document.getElementById('resumoQuarto').innerText = getNomeQuarto();
+                    document.getElementById('resumoCheckin').innerText = checkin;
+                    document.getElementById('resumoCheckout').innerText = checkout;
+                    document.getElementById('resumoNoites').innerText = noites;
+                    document.getElementById('resumoMoeda').innerHTML = SIMBOLOS_MOEDA[moedaAtual];
+                    document.getElementById('resumoValor').innerHTML = formatarMoeda(valorTotalConvertido, moedaAtual);
+                    document.getElementById('resumoReserva').style.display = 'block';
+                } else {
+                    document.getElementById('resumoReserva').style.display = 'none';
+                }
+            }
+            
+            // Inicializar calendários
+            async function inicializarCalendarios() {
+                const quartoSelect = document.getElementById('quarto');
+                const quarto = quartoSelect.value;
+                
+                if (!quarto) return;
+                
+                console.log('📅 Inicializando calendário para quarto:', quarto);
+                
+                const datasBloqueadas = await carregarDatasOcupadas(quarto);
+                
+                // Destruir pickers existentes
+                if (checkinPicker) checkinPicker.destroy();
+                if (checkoutPicker) checkoutPicker.destroy();
+                
+                // Configurar Check-in
+                checkinPicker = flatpickr("#checkin", {
+                    locale: "pt",
+                    dateFormat: "Y-m-d",
+                    minDate: "today",
+                    disable: datasBloqueadas,
+                    onChange: function(selectedDates, dateStr) {
+                        if (checkoutPicker) {
+                            checkoutPicker.set('minDate', dateStr);
+                        }
+                        const checkoutVal = document.getElementById('checkout').value;
+                        if (checkoutVal && new Date(checkoutVal) <= new Date(dateStr)) {
+                            document.getElementById('checkout').value = '';
+                            if (checkoutPicker) checkoutPicker.setDate(null);
+                        }
+                        atualizarResumo();
+                    }
+                });
+                
+                // Configurar Check-out
+                checkoutPicker = flatpickr("#checkout", {
+                    locale: "pt",
+                    dateFormat: "Y-m-d",
+                    minDate: "today",
+                    disable: datasBloqueadas,
+                    onChange: function() {
+                        atualizarResumo();
+                    }
+                });
+                
+                console.log('✅ Calendários inicializados com sucesso!');
+            }
+            
+            // Eventos
+            const quartoSelect = document.getElementById('quarto');
+            quartoSelect.addEventListener('change', function() {
+                inicializarCalendarios();
+                atualizarResumo();
+            });
+            
+            const camaextraCheck = document.getElementById('camaextra');
+            if (camaextraCheck) {
+                camaextraCheck.addEventListener('change', atualizarResumo);
+            }
+            
+            // Evento para mudança de moeda
+            const radiosMoeda = document.querySelectorAll('input[name="moeda"]');
+            radiosMoeda.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    atualizarResumo();
+                });
+            });
+            
+            // Atualizar a exibição do preço no select quando mudar a moeda
+            function atualizarPrecosSelect() {
+                const select = document.getElementById('quarto');
+                const moeda = document.querySelector('input[name="moeda"]:checked').value;
+                const options = select.options;
+                
+                for (let i = 1; i < options.length; i++) {
+                    const option = options[i];
+                    const precoBase = parseInt(option.getAttribute('data-preco'));
+                    const precoConvertido = converterMoeda(precoBase, moeda);
+                    const nomeQuarto = option.text.split(' - ')[0];
+                    option.text = `${nomeQuarto} - ${formatarMoeda(precoConvertido, moeda)}/noite`;
+                }
+            }
+            
+            // Adicionar evento para atualizar textos do select quando mudar moeda
+            radiosMoeda.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    atualizarPrecosSelect();
+                });
+            });
+            
+            // Inicializar
+            inicializarCalendarios();
+            atualizarPrecosSelect();
+            
+            // ============================================
+            // ENVIO DO FORMULÁRIO
+            // ============================================
+            const form = document.getElementById('bookingVitta');
+            const msgSpan = document.getElementById('reserveMsg');
+
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(form);
+                    
+                    // Adicionar a moeda selecionada aos dados do formulário
+                    const moeda = document.querySelector('input[name="moeda"]:checked').value;
+                    formData.append('moeda', moeda);
+                    
+                    try {
+                        const response = await fetch('/reservas/nova', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        
+                        if (response.redirected) {
+                            msgSpan.innerHTML = '🌿 Reserva realizada com sucesso! Redirecionando...';
+                            msgSpan.style.color = '#2C5F2D';
+                            setTimeout(() => {
+                                window.location.href = response.url;
+                            }, 1500);
+                        } else {
+                            const result = await response.json();
+                            console.log('Erro detalhado:', result);
+                            if (result.error) {
+                                msgSpan.innerHTML = '❌ ' + result.error;
+                                msgSpan.style.color = '#dc3545';
+                            } else {
+                                msgSpan.innerHTML = '❌ Erro desconhecido. Verifique o console.';
+                                msgSpan.style.color = '#dc3545';
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Erro completo:', error);
+                        msgSpan.innerHTML = '❌ Erro ao conectar com o servidor. Verifique se o servidor está rodando.';
+                        msgSpan.style.color = '#dc3545';
+                    }
+                    
+                    setTimeout(() => {
+                        msgSpan.innerHTML = '';
+                    }, 5000);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

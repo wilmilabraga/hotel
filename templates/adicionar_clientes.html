@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionar Cliente</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<h1>Adicionar Cliente</h1>
+
+<form method="POST">
+
+    <label>Nome:</label>
+    <input type="text" name="nome" required>
+
+    <label>Tipo:</label>
+    <select name="tipo">
+        <option value="Individual">Individual</option>
+        <option value="Organizacao">Organizacao</option>
+    </select>
+
+    <label>NIF:</label>
+    <input type="text" name="nif">
+
+    <label>Contacto:</label>
+    <input type="text" name="contacto">
+
+    <label>NIPC:</label>
+    <input type="text" name="nipc">
+
+    <button type="submit">Guardar</button>
+
+</form>
+
+</body>
+</html>
